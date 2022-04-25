@@ -3,6 +3,7 @@ pub struct NetworkMessage {
     offset: usize,
 }
 
+#[allow(dead_code)]
 impl NetworkMessage {
     pub fn new(buffer: Vec<u8>) -> Self {
         Self { buffer, offset: 0 }

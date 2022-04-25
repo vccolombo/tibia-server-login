@@ -14,10 +14,10 @@ impl Account {
         if account_number == 1 && password == "1" {
             let mut account = Vec::new();
             let char1 = Character::new("Player 1".to_string(), Server::default());
-            // let char2 = Character::new("Player 2".to_string(), Server::default());
+            let char2 = Character::new("Player 2".to_string(), Server::default());
 
             account.push(char1);
-            // account.push(char2);
+            account.push(char2);
 
             return Some(Self {
                 characters: account,
