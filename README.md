@@ -8,3 +8,11 @@ Uses a fake account with credentials:
 - Password: `1`
 
 Based on https://mateuszholowieszko.com/developing-tibia-server-from-scratch-with-nodejs/
+
+## Screenshots
+
+![](images/login_screen.png)
+![](images/char_list.png)
+![](images/client_logged_in.png)
+
+The client is a black screen because the only thing implemented was the login server, not the game protocol itself.
