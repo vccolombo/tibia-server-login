@@ -35,12 +35,14 @@ async fn handle_data(mut stream: TcpStream) -> std::io::Result<()> {
         } else if prot_id == 0x020A {
             msg.reset();
             msg.add_byte(0xff);
+            msg.update_length();
             stream.write_all(&msg.buffer).await?;
 
             msg.reset();
             msg.add_byte(0xb4);
             msg.add_byte(0x12);
             msg.add_string("Hello world");
+            msg.update_length();
             stream.write_all(&msg.buffer).await?;
         } else {
             println!("Unknown package 0x{:04x}", prot_id);
@@ -73,6 +75,6 @@ fn get_authenticate_response(mut msg: NetworkMessage) -> NetworkMessage {
             msg.add_string("Invalid credentials");
         }
     }
-
+    msg.update_length();
     return msg;
 }

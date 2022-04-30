@@ -74,4 +74,11 @@ impl NetworkMessage {
     pub fn reset(&mut self) {
         self.offset = 2;
     }
+
+    pub fn update_length(&mut self) {
+        // println!("{:#?} {}", self.buffer, self.buffer.len());
+        let len = self.offset - 2;
+        self.buffer[0] = len as u8 & 0xff;
+        self.buffer[1] = ((len >> 8) as u8) & 0xff;
+    }
 }
