@@ -1,7 +1,7 @@
 use async_std::io::ReadExt;
+use async_std::net::TcpListener;
 use async_std::net::TcpStream;
-use async_std::{io::WriteExt, net::TcpListener};
-use futures::StreamExt;
+use futures::{AsyncWriteExt, StreamExt};
 use std::net::SocketAddr;
 
 use crate::{account::Account, network_message::NetworkMessage};
@@ -28,11 +28,11 @@ async fn handle_data(mut stream: TcpStream) -> std::io::Result<()> {
 
         let mut msg = NetworkMessage::new(buffer.to_vec());
         msg.skip_bytes(2);
-        let prot_id = msg.get_u16();
-        if prot_id == 0x0201 {
+        let command_id = msg.get_u16();
+        if command_id == 0x0201 {
             msg = get_authenticate_response(msg);
             stream.write_all(&msg.buffer).await?;
-        } else if prot_id == 0x020A {
+        } else if command_id == 0x020A {
             msg.reset();
             msg.add_byte(0xff);
             msg.update_length();
@@ -44,8 +44,12 @@ async fn handle_data(mut stream: TcpStream) -> std::io::Result<()> {
             msg.add_string("Hello world");
             msg.update_length();
             stream.write_all(&msg.buffer).await?;
+        } else if command_id == 0x0214 {
+            println!("Logout packet");
+            stream.close().await?;
+            return Ok(());
         } else {
-            println!("Unknown package 0x{:04x}", prot_id);
+            println!("Unknown packet 0x{:04x}", command_id);
         }
     }
 }
